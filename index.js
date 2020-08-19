@@ -1,4 +1,4 @@
-const products = [
+let products = [
   {id: 1, title: 'Кофе', price: 20, img: 'https://sun9-13.userapi.com/c857616/v857616085/1de573/-Kl7QhBl9I4.jpg'},
   {id: 2, title: 'Мадера', price: 30, img: 'https://sun9-72.userapi.com/c854028/v854028530/1c4616/WAx6StzaSf8.jpg'},
   {id: 3, title: 'Звездные войны', price: 40, img: 'https://sun9-61.userapi.com/c639619/v639619390/1c92f/mRoxYwtwH1g.jpg'}
@@ -55,19 +55,19 @@ const priceModal = $.modal({
   ]
 })
 
-const confirmModal = $.modal({
-  title: 'Вы уверены?',
-  closable: true,
-  width: '400px',
-  footerButtons: [
-    {text: 'Отменить', type: 'secondary', handler() {
-        confirmModal.close()
-      }},
-    {text: 'Удалить', type: 'danger', handler() {
-        confirmModal.close()
-      }}
-  ]
-})
+// const confirmModal = $.modal({
+//   title: 'Вы уверены?',
+//   closable: true,
+//   width: '400px',
+//   footerButtons: [
+//     {text: 'Отменить', type: 'secondary', handler() {
+//         confirmModal.close()
+//       }},
+//     {text: 'Удалить', type: 'danger', handler() {
+//         confirmModal.close()
+//       }}
+//   ]
+// })
 
 document.addEventListener('click', event => {
   event.preventDefault()
@@ -81,9 +81,14 @@ document.addEventListener('click', event => {
     priceModal.open()
     console.log(product);
   } else if (btnType === 'remove') {
-    confirmModal.setContent(`
-      <p>Вы удаляете товар: <strong>${product.title}</strong></p>
-    `)
-    confirmModal.open()
+    $.confirm({
+      title: 'Вы уверены',
+      content: `<p>Вы удаляете товар: <strong>${product.title}</strong></p>`
+    }).then(() => {
+      products = products.filter(f => f.id !== id)
+      render()
+    }).catch(() => {
+      console.log('Cancel')
+    })
   }
 })
